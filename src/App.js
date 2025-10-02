@@ -3,6 +3,15 @@ import React, { useMemo, useState, useEffect } from "react";
 const WEBHOOK_URL =
   "https://script.google.com/macros/s/AKfycbzwyjdCGeBWN0yAxUI_PtifqcAes83HVqavntRuzleNz8r0cjjHG0nbEfcQV_lYudLC/exec"; // Apps Script Web App URL
 
+// ===== Master CSV (Google Sheet) =====
+// Your sheet info:
+const SHEET_ID = "1hhCVI_qw6CeFTZfwE5vea-WNnJqRYyx4StybsieogxI";
+// If RSVPs are on another tab, replace "0" with that tab's gid (see it in the sheet URL).
+const SHEET_GID = "0";
+// Public CSV export URL. Make sure your sheet is shared so you can access it from any device.
+// Easiest: File → Share → Anyone with the link (Viewer). For fully public, use File → Share → Publish to web (CSV).
+const SHEET_CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${SHEET_GID}`;
+
 // --- Helpers ---
 const LS_KEY = "wedding_rsvps_v1";
 const saveLocal = (entry) => {
@@ -459,17 +468,24 @@ export default function WeddingRSVP() {
             <h3 className="text-lg font-semibold">Host tools</h3>
             <p className="mt-2 text-sm text-gray-600">Visible only to you.</p>
             <div className="mt-4 flex flex-wrap gap-3">
+              {/* Master CSV from Google Sheet */}
               <Button
                 className="bg-white text-gray-900 border border-gray-200"
-                onClick={() => {
-                  const csv = toCSV(localData);
-                  download("wedding-rsvps.csv", csv);
-                }}
+                onClick={() => window.open(SHEET_CSV_URL, "_blank", "noopener,noreferrer")}
               >
-                Download RSVPs (CSV)
+                Download RSVPs (master CSV)
               </Button>
+
+              {/* (Optional) Local-only backup CSV */}
+              <Button
+                className="bg-white text-gray-900 border border-gray-200"
+                onClick={exportCSV}
+              >
+                Download local RSVPs (this device)
+              </Button>
+
               <Button className="bg-white text-gray-900 border border-gray-200" onClick={clearAll}>
-                Clear saved RSVPs
+                Clear saved RSVPs (this device)
               </Button>
             </div>
             <div className="mt-4 text-xs text-gray-500">
