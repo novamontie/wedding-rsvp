@@ -173,15 +173,15 @@ export default function WeddingRSVP() {
   // Dynamic guest details array
   const [guestsDetails, setGuestsDetails] = useState([{ name: "", dietary: "" }]);
 
-  // Load the fancy script font (Great Vibes) once
+  // Load Apple Chancery-like fonts once (prefer local Apple Chancery if present)
   useEffect(() => {
-    const id = "gf-great-vibes";
+    const id = "gf-allura-alexbrush";
     if (!document.getElementById(id)) {
       const link = document.createElement("link");
       link.id = id;
       link.rel = "stylesheet";
       link.href =
-        "https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap";
+        "https://fonts.googleapis.com/css2?family=Allura&family=Alex+Brush&display=swap";
       document.head.appendChild(link);
     }
   }, []);
@@ -199,7 +199,7 @@ export default function WeddingRSVP() {
   const localData = useMemo(() => loadLocal(), [submitted]);
 
   const WEDDING = {
-    coupleNames: "Liam & Demi",
+    coupleNames: "Demi & Liam",
     date: "Saturday 14th March 2026",
     time: "12:30 PM Arrival",
     venue: "79 Gelderd Road Gildersome Leeds LS27 7LY",
@@ -282,7 +282,7 @@ export default function WeddingRSVP() {
 
   return (
     <div className="relative min-h-screen text-gray-900">
-      {/* Gold foil + script styles */}
+      {/* Gold foil + chancery-like script styles */}
       <style>{`
         @keyframes goldShimmer {
           0% { background-position: 0% 50%; }
@@ -305,9 +305,11 @@ export default function WeddingRSVP() {
           animation: goldShimmer 8s linear infinite;
           filter: drop-shadow(0 1px 0 rgba(0,0,0,0.35));
         }
+        /* Prefer local Apple Chancery on Macs, then fall back to close web fonts */
         .fancy-script {
-          font-family: "Great Vibes", cursive;
-          letter-spacing: 0.5px;
+          font-family: "Apple Chancery", "Allura", "Alex Brush", "Great Vibes", cursive;
+          letter-spacing: 0.2px;
+          font-weight: 400;
         }
       `}</style>
 
@@ -563,3 +565,4 @@ export default function WeddingRSVP() {
     </div>
   );
 }
+
