@@ -199,7 +199,7 @@ export default function WeddingRSVP() {
   const localData = useMemo(() => loadLocal(), [submitted]);
 
   const WEDDING = {
-    coupleNames: "Demi & Liam",
+    coupleNames: "Liam & Demi",
     date: "Saturday 14th March 2026",
     time: "12:30 PM Arrival",
     venue: "79 Gelderd Road Gildersome Leeds LS27 7LY",
@@ -494,8 +494,9 @@ export default function WeddingRSVP() {
           </section>
         )}
 
-        {/* Info + Admin tools */}
+        {/* Details + Accommodation (now above Host tools) + Host tools */}
         <section className="mt-8 grid gap-6 sm:grid-cols-2">
+          {/* Details */}
           <div className="rounded-3xl bg-white/90 shadow p-6">
             <h3 className="text-lg font-semibold">Details</h3>
             <ul className="mt-4 space-y-2 text-sm text-gray-700">
@@ -506,7 +507,25 @@ export default function WeddingRSVP() {
             </ul>
           </div>
 
+          {/* Nearby accommodation details — moved up */}
           <div className="rounded-3xl bg-white/90 shadow p-6">
+            <h3 className="text-lg font-semibold">Nearby accommodation details</h3>
+            <ul className="mt-4 space-y-4 text-sm text-gray-700">
+              <li className="rounded-2xl border border-gray-200 p-4 bg-white/70">
+                <p className="font-medium">Premier Inn — Leeds South (Birstall)</p>
+                <p>Wakefield Road, BD11 1EA</p>
+                <p className="text-gray-600">1.5 miles — 6 minute drive from Woodlands Hotel</p>
+              </li>
+              <li className="rounded-2xl border border-gray-200 p-4 bg-white/70">
+                <p className="font-medium">Travelodge — Leeds Morley</p>
+                <p>Bruntcliffe Road, LS26 0LY</p>
+                <p className="text-gray-600">1.8 miles — 7 minute drive from Woodlands Hotel</p>
+              </li>
+            </ul>
+          </div>
+
+          {/* Host tools */}
+          <div className="rounded-3xl bg-white/90 shadow p-6 sm:col-span-2">
             <h3 className="text-lg font-semibold">Host tools</h3>
             <p className="mt-2 text-sm text-gray-600">Visible only to you.</p>
             <div className="mt-4 flex flex-wrap gap-3">
@@ -539,25 +558,6 @@ export default function WeddingRSVP() {
           </div>
         </section>
 
-        {/* Nearby accommodation details */}
-        <section className="mt-8">
-          <div className="rounded-3xl bg-white/90 shadow p-6">
-            <h3 className="text-lg font-semibold">Nearby accommodation details</h3>
-            <ul className="mt-4 space-y-4 text-sm text-gray-700">
-              <li className="rounded-2xl border border-gray-200 p-4 bg-white/70">
-                <p className="font-medium">Premier Inn — Leeds South (Birstall)</p>
-                <p>Wakefield Road, BD11 1EA</p>
-                <p className="text-gray-600">1.5 miles — 6 minute drive from Woodlands Hotel</p>
-              </li>
-              <li className="rounded-2xl border border-gray-200 p-4 bg-white/70">
-                <p className="font-medium">Travelodge — Leeds Morley</p>
-                <p>Bruntcliffe Road, LS26 0LY</p>
-                <p className="text-gray-600">1.8 miles — 7 minute drive from Woodlands Hotel</p>
-              </li>
-            </ul>
-          </div>
-        </section>
-
         <footer className="py-16 text-center text-xs text-gray-500">
           Made with ❤️
         </footer>
@@ -565,4 +565,3 @@ export default function WeddingRSVP() {
     </div>
   );
 }
-
