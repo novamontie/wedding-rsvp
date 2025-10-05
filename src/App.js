@@ -4,12 +4,8 @@ const WEBHOOK_URL =
   "https://script.google.com/macros/s/AKfycbzwyjdCGeBWN0yAxUI_PtifqcAes83HVqavntRuzleNz8r0cjjHG0nbEfcQV_lYudLC/exec"; // Apps Script Web App URL
 
 // ===== Master CSV (Google Sheet) =====
-// Your sheet info:
 const SHEET_ID = "1hhCVI_qw6CeFTZfwE5vea-WNnJqRYyx4StybsieogxI";
-// If RSVPs are on another tab, replace "0" with that tab's gid (see it in the sheet URL).
 const SHEET_GID = "0";
-// Public CSV export URL. Make sure your sheet is shared so you can access it from any device.
-// Easiest: File → Share → Anyone with the link (Viewer). For fully public, use File → Share → Publish to web (CSV).
 const SHEET_CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${SHEET_GID}`;
 
 // --- Helpers ---
@@ -41,7 +37,7 @@ const toCSV = (rows) => {
     "email",
     "attending",
     "guests",
-    "dietary", // overall notes
+    "dietary",
     "message",
     "userAgent",
   ];
@@ -177,6 +173,19 @@ export default function WeddingRSVP() {
   // Dynamic guest details array
   const [guestsDetails, setGuestsDetails] = useState([{ name: "", dietary: "" }]);
 
+  // Load the fancy script font (Great Vibes) once
+  useEffect(() => {
+    const id = "gf-great-vibes";
+    if (!document.getElementById(id)) {
+      const link = document.createElement("link");
+      link.id = id;
+      link.rel = "stylesheet";
+      link.href =
+        "https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap";
+      document.head.appendChild(link);
+    }
+  }, []);
+
   // Sync array length with guests count
   useEffect(() => {
     const n = Math.max(0, Number(form.guests) || 0);
@@ -231,26 +240,22 @@ export default function WeddingRSVP() {
     const payload = {
       ...form,
       guests: Number(form.guests),
-      guestsDetails, // array of { name, dietary }
+      guestsDetails,
       submittedAt: new Date().toISOString(),
       userAgent: navigator.userAgent,
     };
 
     setSubmitting(true);
     try {
-      // Save locally so you can export even if network fails
       saveLocal(payload);
-
-      // Post to your Google Apps Script Web App
       if (WEBHOOK_URL) {
         await fetch(WEBHOOK_URL, {
           method: "POST",
-          mode: "no-cors", // avoid CORS errors from browser → Apps Script
-          headers: { "Content-Type": "text/plain" }, // send JSON as plain text
+          mode: "no-cors",
+          headers: { "Content-Type": "text/plain" },
           body: JSON.stringify(payload),
         });
       }
-
       setSubmitted(true);
     } catch (err) {
       console.error(err);
@@ -277,6 +282,35 @@ export default function WeddingRSVP() {
 
   return (
     <div className="relative min-h-screen text-gray-900">
+      {/* Gold foil + script styles */}
+      <style>{`
+        @keyframes goldShimmer {
+          0% { background-position: 0% 50%; }
+          100% { background-position: 100% 50%; }
+        }
+        .gold-text {
+          background-image: linear-gradient(
+            115deg,
+            #8a6b2c 0%,
+            #d4af37 18%,
+            #fff4c2 36%,
+            #b8860b 54%,
+            #f5e2a3 72%,
+            #8a6b2c 100%
+          );
+          background-size: 200% 100%;
+          -webkit-background-clip: text;
+          background-clip: text;
+          color: transparent;
+          animation: goldShimmer 8s linear infinite;
+          filter: drop-shadow(0 1px 0 rgba(0,0,0,0.35));
+        }
+        .fancy-script {
+          font-family: "Great Vibes", cursive;
+          letter-spacing: 0.5px;
+        }
+      `}</style>
+
       {/* Venue background across entire site */}
       <div
         className="absolute inset-0 -z-20 bg-cover bg-center"
@@ -292,22 +326,28 @@ export default function WeddingRSVP() {
           style={{ backgroundImage: "url('/hero.jpg')" }}
         />
         <div className="absolute inset-0 -z-0 bg-black/30" />
-        <div className="relative mx-auto max-w-4xl px-6 pt-24 pb-10 text-center text-white">
+        <div className="relative mx-auto max-w-4xl px-6 pt-24 pb-10 text-center">
           {/* narrow line-length wrapper so lines stay short */}
           <div className="mx-auto max-w-[26ch] sm:max-w-[34ch] [text-wrap:balance]">
-            <p className="tracking-widest uppercase text-sm leading-6">You're invited</p>
-            <h1 className="mt-2 text-4xl sm:text-5xl font-semibold drop-shadow">
-              {WEDDING.coupleNames}
+            <p className="tracking-widest uppercase text-sm leading-6 gold-text">
+              You're invited
+            </p>
+
+            <h1 className="mt-2 text-5xl sm:text-6xl font-semibold">
+              <span className="gold-text fancy-script">{WEDDING.coupleNames}</span>
             </h1>
-            <p className="mt-3 text-base sm:text-lg drop-shadow leading-relaxed">
+
+            <p className="mt-4 text-lg sm:text-xl leading-relaxed gold-text">
               {WEDDING.date} at {WEDDING.time}
             </p>
+
             {/* Manual line breaks for the address */}
-            <p className="text-base sm:text-lg drop-shadow leading-relaxed">
+            <p className="text-lg sm:text-xl leading-relaxed gold-text">
               <span className="block">79 Gelderd Road</span>
               <span className="block">Gildersome</span>
               <span className="block">Leeds LS27 7LY</span>
             </p>
+
             <div className="mt-6 inline-flex rounded-2xl bg-white/90 px-4 py-1 text-xs font-medium text-gray-900">
               Please RSVP by {WEDDING.rsvpBy}
             </div>
