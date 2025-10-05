@@ -199,8 +199,8 @@ export default function WeddingRSVP() {
   const localData = useMemo(() => loadLocal(), [submitted]);
 
   const WEDDING = {
-    coupleNames: "Liam & Demi",
-    date: "Saturday 14th March 2026",
+    coupleNames: "Demi & Liam",
+    date: "14th March 2026",
     time: "12:30 PM Arrival",
     venue: "79 Gelderd Road Gildersome Leeds LS27 7LY",
     rsvpBy: "14th January 2026",
