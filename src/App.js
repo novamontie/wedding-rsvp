@@ -396,7 +396,7 @@ export default function WeddingRSVP() {
                   value={form.attending}
                   onChange={(v) => handleChange("attending", v)}
                   options={[
-                    { value: "yes", label: "Joyfully accepts" },
+                    { value: "yes", label: "Greatfully accepts" },
                     { value: "no", label: "Regretfully declines" },
                   ]}
                 />
