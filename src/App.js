@@ -328,7 +328,7 @@ export default function WeddingRSVP() {
       <header className="relative isolate min-h-[80vh]">
         <div
           className="absolute inset-0 -z-10 bg-center bg-no-repeat bg-contain"
-          style={{ backgroundImage: "url('/hero.jpg')" }}
+          style={{ backgroundImage: "url('/hero1.jpg')" }}
         />
         <div className="absolute inset-0 -z-0 bg-black/30" />
         <div className="relative mx-auto max-w-4xl px-6 pt-24 pb-10 text-center">
