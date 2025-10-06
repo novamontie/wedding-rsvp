@@ -1,12 +1,12 @@
 import React, { useMemo, useState, useEffect } from "react";
 
 const WEBHOOK_URL =
-  "https://script.google.com/macros/s/AKfycbzwyjdCGeBWN0yAxUI_PtifqcAes83HVqavntRuzleNz8r0cjjHG0nbEfcQV_lYudLC/exec"; // Apps Script Web App URL
+  "https://script.google.com/macros/s/AKfycbzwyjdCGeBWN0yAxUI_PtifqcAes83HVqavntRuzleNz8r0cjjHG0nbEfcQV_lYudLC/exec"; // Apps Script Web App URL (must be /exec)
 
-// ===== Master CSV (Google Sheet) =====
-const SHEET_ID = "1hhCVI_qw6CeFTZfwE5vea-WNnJqRYyx4StybsieogxI";
-const SHEET_GID = "0";
-const SHEET_CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${SHEET_GID}`;
+// ===== Public CSV (Published Google Sheet) =====
+// You gave this link — it’s already public and outputs CSV for the RSVP tab:
+const SHEET_CSV_URL =
+  "https://docs.google.com/spreadsheets/d/e/2PACX-1vRmrd2x4qKVd_Ht6s39BVVYdRQ6VmzHm7NNVAOP46N_AHR0RngQdVDfcPNiivw8wur6eaGB3mPDiMj6/pub?gid=659430027&single=true&output=csv";
 
 // --- Helpers ---
 const LS_KEY = "wedding_rsvps_v1";
@@ -173,7 +173,7 @@ export default function WeddingRSVP() {
   // Dynamic guest details array
   const [guestsDetails, setGuestsDetails] = useState([{ name: "", dietary: "" }]);
 
-  // Load Apple Chancery-like fonts once (prefer local Apple Chancery if present)
+  // Load Apple Chancery-like web fonts once
   useEffect(() => {
     const id = "gf-allura-alexbrush";
     if (!document.getElementById(id)) {
@@ -201,7 +201,7 @@ export default function WeddingRSVP() {
   const WEDDING = {
     coupleNames: "Demi & Liam",
     date: "14th March 2026",
-    time: "12:30 PM",
+    time: "12:30 PM Arrival",
     venue: "79 Gelderd Road Gildersome Leeds LS27 7LY",
     rsvpBy: "14th January 2026",
   };
@@ -240,22 +240,26 @@ export default function WeddingRSVP() {
     const payload = {
       ...form,
       guests: Number(form.guests),
-      guestsDetails,
+      guestsDetails, // array of { name, dietary }
       submittedAt: new Date().toISOString(),
       userAgent: navigator.userAgent,
     };
 
     setSubmitting(true);
     try {
+      // Save locally so you can export even if network fails
       saveLocal(payload);
+
+      // Post to your Google Apps Script Web App
       if (WEBHOOK_URL) {
         await fetch(WEBHOOK_URL, {
           method: "POST",
-          mode: "no-cors",
-          headers: { "Content-Type": "text/plain" },
+          mode: "no-cors", // avoid CORS errors from browser → Apps Script
+          headers: { "Content-Type": "text/plain" }, // send JSON as plain text
           body: JSON.stringify(payload),
         });
       }
+
       setSubmitted(true);
     } catch (err) {
       console.error(err);
@@ -305,7 +309,6 @@ export default function WeddingRSVP() {
           animation: goldShimmer 8s linear infinite;
           filter: drop-shadow(0 1px 0 rgba(0,0,0,0.35));
         }
-        /* Prefer local Apple Chancery on Macs, then fall back to close web fonts */
         .fancy-script {
           font-family: "Apple Chancery", "Allura", "Alex Brush", "Great Vibes", cursive;
           letter-spacing: 0.2px;
@@ -494,7 +497,7 @@ export default function WeddingRSVP() {
           </section>
         )}
 
-        {/* Details + Accommodation (now above Host tools) + Host tools */}
+        {/* Details + Accommodation + Host tools */}
         <section className="mt-8 grid gap-6 sm:grid-cols-2">
           {/* Details */}
           <div className="rounded-3xl bg-white/90 shadow p-6">
@@ -507,7 +510,7 @@ export default function WeddingRSVP() {
             </ul>
           </div>
 
-          {/* Nearby accommodation details — moved up */}
+          {/* Nearby accommodation details */}
           <div className="rounded-3xl bg-white/90 shadow p-6">
             <h3 className="text-lg font-semibold">Nearby accommodation details</h3>
             <ul className="mt-4 space-y-4 text-sm text-gray-700">
@@ -529,7 +532,7 @@ export default function WeddingRSVP() {
             <h3 className="text-lg font-semibold">Host tools</h3>
             <p className="mt-2 text-sm text-gray-600">Visible only to you.</p>
             <div className="mt-4 flex flex-wrap gap-3">
-              {/* Master CSV from Google Sheet */}
+              {/* Master CSV (published link you provided) */}
               <Button
                 className="bg-white text-gray-900 border border-gray-200"
                 onClick={() => window.open(SHEET_CSV_URL, "_blank", "noopener,noreferrer")}
@@ -537,7 +540,7 @@ export default function WeddingRSVP() {
                 Download RSVPs (master CSV)
               </Button>
 
-              {/* (Optional) Local-only backup CSV */}
+              {/* Local-only backup CSV */}
               <Button
                 className="bg-white text-gray-900 border border-gray-200"
                 onClick={exportCSV}
@@ -565,3 +568,4 @@ export default function WeddingRSVP() {
     </div>
   );
 }
+
