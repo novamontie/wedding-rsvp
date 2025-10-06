@@ -348,6 +348,7 @@ export default function WeddingRSVP() {
 
             {/* Manual line breaks for the address */}
             <p className="text-lg sm:text-xl leading-relaxed gold-text">
+              <span className="block">Woodlands Hotel</span>
               <span className="block">79 Gelderd Road</span>
               <span className="block">Gildersome</span>
               <span className="block">Leeds LS27 7LY</span>
