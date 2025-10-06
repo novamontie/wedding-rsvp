@@ -201,7 +201,7 @@ export default function WeddingRSVP() {
   const WEDDING = {
     coupleNames: "Demi & Liam",
     date: "14th March 2026",
-    time: "12:30 PM",
+    time: "12:30PM",
     venue: " Woodlands Hotel, 79 Gelderd Road, Gildersome, Leeds, LS27 7LY",
     rsvpBy: "14th January 2026",
   };
