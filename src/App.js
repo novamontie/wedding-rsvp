@@ -4,7 +4,6 @@ const WEBHOOK_URL =
   "https://script.google.com/macros/s/AKfycbzwyjdCGeBWN0yAxUI_PtifqcAes83HVqavntRuzleNz8r0cjjHG0nbEfcQV_lYudLC/exec"; // Apps Script Web App URL (must be /exec)
 
 // ===== Public CSV (Published Google Sheet) =====
-// You gave this link — it’s already public and outputs CSV for the RSVP tab:
 const SHEET_CSV_URL =
   "https://docs.google.com/spreadsheets/d/1hhCVI_qw6CeFTZfwE5vea-WNnJqRYyx4StybsieogxI/edit?usp=sharing";
 
@@ -37,7 +36,7 @@ const toCSV = (rows) => {
     "email",
     "attending",
     "guests",
-    "dietary",
+    "dietary", // will be empty now (no general dietary field), kept for compatibility
     "message",
     "userAgent",
   ];
@@ -78,7 +77,7 @@ const toCSV = (rows) => {
       escape(r.email || ""),
       escape(r.attending || ""),
       escape(r.guests ?? ""),
-      escape(r.dietary || ""),
+      escape(r.dietary || ""), // empty now
       escape(r.message || ""),
       escape(r.userAgent || "")
     );
@@ -161,12 +160,13 @@ export default function WeddingRSVP() {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
 
+  // kept `dietary` in state for backward compatibility, but we no longer render a general dietary input
   const [form, setForm] = useState({
     fullName: "",
     email: "",
     attending: "yes",
     guests: 1,
-    dietary: "",
+    dietary: "", // stays empty; only per-guest dietary is collected
     message: "",
   });
 
@@ -286,7 +286,7 @@ export default function WeddingRSVP() {
 
   return (
     <div className="relative min-h-screen text-gray-900">
-      {/* Gold foil + chancery-like script styles */}
+      {/* Lighter gold + darker hero styles */}
       <style>{`
         @keyframes goldShimmer {
           0% { background-position: 0% 50%; }
@@ -295,19 +295,19 @@ export default function WeddingRSVP() {
         .gold-text {
           background-image: linear-gradient(
             115deg,
-            #8a6b2c 0%,
-            #d4af37 18%,
-            #fff4c2 36%,
-            #b8860b 54%,
-            #f5e2a3 72%,
-            #8a6b2c 100%
+            #d8c06a 0%,
+            #eadb9c 18%,
+            #fff6cf 36%,
+            #f1e4a8 54%,
+            #fff7dc 72%,
+            #e8d48a 100%
           );
           background-size: 200% 100%;
           -webkit-background-clip: text;
           background-clip: text;
           color: transparent;
-          animation: goldShimmer 8s linear infinite;
-          filter: drop-shadow(0 1px 0 rgba(0,0,0,0.35));
+          animation: goldShimmer 10s linear infinite;
+          filter: drop-shadow(0 0.5px 0 rgba(0,0,0,0.25));
         }
         .fancy-script {
           font-family: "Apple Chancery", "Allura", "Alex Brush", "Great Vibes", cursive;
@@ -324,19 +324,17 @@ export default function WeddingRSVP() {
       {/* overlay tint so text stays readable */}
       <div className="absolute inset-0 -z-10 bg-white/70" />
 
-      {/* Hero section with hero.jpg */}
+      {/* Hero section with hero1.jpg (darker overlay now) */}
       <header className="relative isolate min-h-[80vh]">
         <div
           className="absolute inset-0 -z-10 bg-center bg-no-repeat bg-contain"
           style={{ backgroundImage: "url('/hero1.jpg')" }}
         />
-        <div className="absolute inset-0 -z-0 bg-black/30" />
+        <div className="absolute inset-0 -z-0 bg-black/50" />
         <div className="relative mx-auto max-w-4xl px-6 pt-24 pb-10 text-center">
           {/* narrow line-length wrapper so lines stay short */}
           <div className="mx-auto max-w-[26ch] sm:max-w-[34ch] [text-wrap:balance]">
-            <p className="tracking-widest uppercase text-sm leading-6 gold-text">
-              You're invited
-            </p>
+            <p className="tracking-widest uppercase text-sm leading-6 gold-text"></p>
 
             <h1 className="mt-2 text-5xl sm:text-6xl font-semibold">
               <span className="gold-text fancy-script">{WEDDING.coupleNames}</span>
@@ -403,28 +401,19 @@ export default function WeddingRSVP() {
                 />
               </div>
 
-              <div className="grid sm:grid-cols-2 gap-5">
-                <div>
-                  <Label>How many guests (including you)?</Label>
-                  <Input
-                    type="number"
-                    min={0}
-                    step={1}
-                    value={form.guests}
-                    onChange={(e) => handleChange("guests", e.target.value)}
-                  />
-                </div>
-                <div>
-                  <Label>Any additional dietary notes (optional)</Label>
-                  <Input
-                    placeholder="Vegetarian, nut allergy, etc."
-                    value={form.dietary}
-                    onChange={(e) => handleChange("dietary", e.target.value)}
-                  />
-                </div>
+              {/* Guests count (general dietary input removed per your request) */}
+              <div>
+                <Label>How many guests (including you)?</Label>
+                <Input
+                  type="number"
+                  min={0}
+                  step={1}
+                  value={form.guests}
+                  onChange={(e) => handleChange("guests", e.target.value)}
+                />
               </div>
 
-              {/* Per-guest fields */}
+              {/* Per-guest fields (names + dietary only here) */}
               {form.attending === "yes" && Number(form.guests) > 0 && (
                 <div className="mt-2 grid gap-4">
                   <h3 className="text-lg font-semibold">Guest details</h3>
