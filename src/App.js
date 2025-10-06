@@ -6,7 +6,7 @@ const WEBHOOK_URL =
 // ===== Public CSV (Published Google Sheet) =====
 // You gave this link — it’s already public and outputs CSV for the RSVP tab:
 const SHEET_CSV_URL =
-  "https://docs.google.com/spreadsheets/d/e/2PACX-1vRmrd2x4qKVd_Ht6s39BVVYdRQ6VmzHm7NNVAOP46N_AHR0RngQdVDfcPNiivw8wur6eaGB3mPDiMj6/pub?gid=659430027&single=true&output=csv";
+  "https://docs.google.com/spreadsheets/d/1hhCVI_qw6CeFTZfwE5vea-WNnJqRYyx4StybsieogxI/edit?usp=sharing";
 
 // --- Helpers ---
 const LS_KEY = "wedding_rsvps_v1";
