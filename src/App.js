@@ -295,12 +295,12 @@ export default function WeddingRSVP() {
         .gold-text {
           background-image: linear-gradient(
             115deg,
-            #d8c06a 0%,
-            #eadb9c 18%,
-            #fff6cf 36%,
-            #f1e4a8 54%,
-            #fff7dc 72%,
-            #e8d48a 100%
+            #caa034 0%,
+            #d6b54a 18%,
+            #e4c96a 36%,
+            #f1d98a 54%,
+            #f7e3a2 72%,
+            #f9ebbf 100%
           );
           background-size: 200% 100%;
           -webkit-background-clip: text;
@@ -331,21 +331,22 @@ export default function WeddingRSVP() {
           style={{ backgroundImage: "url('/hero1.jpg')" }}
         />
         <div className="absolute inset-0 -z-0 bg-black/50" />
-        <div className="relative mx-auto max-w-4xl px-6 pt-24 pb-10 text-center">
+        {/* moved heading down a bit (was pt-24) */}
+        <div className="relative mx-auto max-w-4xl px-6 pt-32 pb-10 text-center">
           {/* narrow line-length wrapper so lines stay short */}
           <div className="mx-auto max-w-[26ch] sm:max-w-[34ch] [text-wrap:balance]">
             <p className="tracking-widest uppercase text-sm leading-6 gold-text"></p>
 
-            <h1 className="mt-2 text-5xl sm:text-6xl font-semibold">
+            <h1 className="mt-4 text-5xl sm:text-6xl font-semibold">
               <span className="gold-text fancy-script">{WEDDING.coupleNames}</span>
             </h1>
 
-            <p className="mt-4 text-lg sm:text-xl leading-relaxed gold-text">
+            <p className="mt-6 text-lg sm:text-xl leading-relaxed gold-text">
               {WEDDING.date} at {WEDDING.time}
             </p>
 
             {/* Manual line breaks for the address */}
-            <p className="text-lg sm:text-xl leading-relaxed gold-text">
+            <p className="mt-2 text-lg sm:text-xl leading-relaxed gold-text">
               <span className="block">Woodlands Hotel</span>
               <span className="block">79 Gelderd Road</span>
               <span className="block">Gildersome</span>
@@ -363,7 +364,7 @@ export default function WeddingRSVP() {
       <main className="relative mx-auto max-w-4xl px-6 -mt-10">
         {!submitted ? (
           <section className="rounded-3xl bg-white/90 shadow-xl p-6 sm:p-8">
-            <h2 className="text-2xl font-semibold">RSVP</h2>
+            <h2 className="text-2xl font-semibold mt-2">RSVP</h2>
             <p className="mt-1 text-sm text-gray-600">
               Let us know if you can celebrate with us. One form per invitation is perfect. ✨
             </p>
@@ -401,7 +402,7 @@ export default function WeddingRSVP() {
                 />
               </div>
 
-              {/* Guests count (general dietary input removed per your request) */}
+              {/* Guests count */}
               <div>
                 <Label>How many guests (including you)?</Label>
                 <Input
@@ -413,10 +414,10 @@ export default function WeddingRSVP() {
                 />
               </div>
 
-              {/* Per-guest fields (names + dietary only here) */}
+              {/* Per-guest fields */}
               {form.attending === "yes" && Number(form.guests) > 0 && (
                 <div className="mt-2 grid gap-4">
-                  <h3 className="text-lg font-semibold">Guest details</h3>
+                  <h3 className="text-lg font-semibold mt-1">Guest details</h3>
                   {guestsDetails.map((g, i) => (
                     <div key={i} className="rounded-2xl border border-gray-200 bg-white/70 p-4">
                       <div className="grid sm:grid-cols-2 gap-4">
@@ -469,7 +470,7 @@ export default function WeddingRSVP() {
             <div className="mx-auto mb-4 h-12 w-12 rounded-full bg-green-100 flex items-center justify-center">
               ✅
             </div>
-            <h2 className="text-2xl font-semibold">Thank you!</h2>
+            <h2 className="text-2xl font-semibold mt-2">Thank you!</h2>
             <p className="mt-1 text-gray-600">
               Your RSVP has been received. We can’t wait to celebrate together.
             </p>
@@ -491,7 +492,7 @@ export default function WeddingRSVP() {
         <section className="mt-8 grid gap-6 sm:grid-cols-2">
           {/* Details */}
           <div className="rounded-3xl bg-white/90 shadow p-6">
-            <h3 className="text-lg font-semibold">Details</h3>
+            <h3 className="text-lg font-semibold mt-1">Details</h3>
             <ul className="mt-4 space-y-2 text-sm text-gray-700">
               <li><strong>Date:</strong> {WEDDING.date}</li>
               <li><strong>Time:</strong> {WEDDING.time}</li>
@@ -502,7 +503,7 @@ export default function WeddingRSVP() {
 
           {/* Nearby accommodation details */}
           <div className="rounded-3xl bg-white/90 shadow p-6">
-            <h3 className="text-lg font-semibold">Nearby accommodation details</h3>
+            <h3 className="text-lg font-semibold mt-1">Nearby accommodation details</h3>
             <ul className="mt-4 space-y-4 text-sm text-gray-700">
               <li className="rounded-2xl border border-gray-200 p-4 bg-white/70">
                 <p className="font-medium">Premier Inn — Leeds South (Birstall)</p>
@@ -519,7 +520,7 @@ export default function WeddingRSVP() {
 
           {/* Host tools */}
           <div className="rounded-3xl bg-white/90 shadow p-6 sm:col-span-2">
-            <h3 className="text-lg font-semibold">Host tools</h3>
+            <h3 className="text-lg font-semibold mt-1">Host tools</h3>
             <p className="mt-2 text-sm text-gray-600">Visible only to you.</p>
             <div className="mt-4 flex flex-wrap gap-3">
               {/* Master CSV (published link you provided) */}
@@ -558,4 +559,5 @@ export default function WeddingRSVP() {
     </div>
   );
 }
+
 
