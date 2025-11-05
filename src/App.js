@@ -511,7 +511,7 @@ export default function WeddingRSVP() {
               </li>
               <li className="rounded-2xl border border-gray-200 p-4 bg-white/70">
                 <p className="font-medium">Travelodge — Leeds Morley</p>
-                <p>Bruntcliffe Road, LS26 0LY</p>
+                <p>Bruntcliffe Road, LS27 0LY</p>
                 <p className="text-gray-600">1.8 miles — 7 minute drive from Woodlands Hotel</p>
               </li>
             </ul>
