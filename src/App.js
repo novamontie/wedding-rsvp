@@ -1,7 +1,7 @@
 import React, { useMemo, useState, useEffect } from "react";
 
 const WEBHOOK_URL =
-  "https://script.google.com/macros/s/AKfycbzwyjdCGeBWN0yAxUI_PtifqcAes83HVqavntRuzleNz8r0cjjHG0nbEfcQV_lYudLC/exec"; // Apps Script Web App URL (must be /exec)
+  "https://script.google.com/macros/s/AKfycbzwyjdCGeBWN0yAxUI_PtifqcAes83HVqavntRuzleNz8r0cjjHG0nbEfcQV_lYudLC/exec";
 
 // ===== Public CSV (Published Google Sheet) =====
 const SHEET_CSV_URL =
@@ -36,7 +36,7 @@ const toCSV = (rows) => {
     "email",
     "attending",
     "guests",
-    "dietary", // will be empty now (no general dietary field), kept for compatibility
+    "dietary",
     "message",
     "userAgent",
   ];
@@ -77,7 +77,7 @@ const toCSV = (rows) => {
       escape(r.email || ""),
       escape(r.attending || ""),
       escape(r.guests ?? ""),
-      escape(r.dietary || ""), // empty now
+      escape(r.dietary || ""),
       escape(r.message || ""),
       escape(r.userAgent || "")
     );
@@ -160,20 +160,17 @@ export default function WeddingRSVP() {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
 
-  // kept `dietary` in state for backward compatibility, but we no longer render a general dietary input
   const [form, setForm] = useState({
     fullName: "",
     email: "",
     attending: "yes",
     guests: 1,
-    dietary: "", // stays empty; only per-guest dietary is collected
+    dietary: "",
     message: "",
   });
 
-  // Dynamic guest details array
   const [guestsDetails, setGuestsDetails] = useState([{ name: "", dietary: "" }]);
 
-  // Load Apple Chancery-like web fonts once
   useEffect(() => {
     const id = "gf-allura-alexbrush";
     if (!document.getElementById(id)) {
@@ -186,7 +183,6 @@ export default function WeddingRSVP() {
     }
   }, []);
 
-  // Sync array length with guests count
   useEffect(() => {
     const n = Math.max(0, Number(form.guests) || 0);
     setGuestsDetails((prev) => {
@@ -240,22 +236,20 @@ export default function WeddingRSVP() {
     const payload = {
       ...form,
       guests: Number(form.guests),
-      guestsDetails, // array of { name, dietary }
+      guestsDetails,
       submittedAt: new Date().toISOString(),
       userAgent: navigator.userAgent,
     };
 
     setSubmitting(true);
     try {
-      // Save locally so you can export even if network fails
       saveLocal(payload);
 
-      // Post to your Google Apps Script Web App
       if (WEBHOOK_URL) {
         await fetch(WEBHOOK_URL, {
           method: "POST",
-          mode: "no-cors", // avoid CORS errors from browser → Apps Script
-          headers: { "Content-Type": "text/plain" }, // send JSON as plain text
+          mode: "no-cors",
+          headers: { "Content-Type": "text/plain" },
           body: JSON.stringify(payload),
         });
       }
@@ -269,24 +263,12 @@ export default function WeddingRSVP() {
     }
   };
 
-  const clearAll = () => {
-    if (window.confirm("Delete ALL saved RSVPs on this device?")) {
-      localStorage.removeItem(LS_KEY);
-      window.location.reload();
-    }
-  };
-  const exportCSV = () => {
-    const csv = toCSV(localData);
-    download("wedding-rsvps.csv", csv);
-  };
-
   useEffect(() => {
     document.title = `${WEDDING.coupleNames} – Wedding RSVP`;
   }, []);
 
   return (
     <div className="relative min-h-screen text-gray-900">
-      {/* Lighter gold + darker hero styles */}
       <style>{`
         @keyframes goldShimmer {
           0% { background-position: 0% 50%; }
@@ -316,24 +298,19 @@ export default function WeddingRSVP() {
         }
       `}</style>
 
-      {/* Venue background across entire site */}
       <div
         className="absolute inset-0 -z-20 bg-cover bg-center"
         style={{ backgroundImage: "url('/venue.jpg')" }}
       />
-      {/* overlay tint so text stays readable */}
       <div className="absolute inset-0 -z-10 bg-white/70" />
 
-      {/* Hero section with hero1.jpg (darker overlay now) */}
       <header className="relative isolate min-h-[80vh]">
         <div
           className="absolute inset-0 -z-10 bg-center bg-no-repeat bg-contain"
           style={{ backgroundImage: "url('/hero1.jpg')" }}
         />
         <div className="absolute inset-0 -z-0 bg-black/50" />
-        {/* moved heading down a bit (was pt-24) */}
         <div className="relative mx-auto max-w-4xl px-6 pt-32 pb-10 text-center">
-          {/* narrow line-length wrapper so lines stay short */}
           <div className="mx-auto max-w-[26ch] sm:max-w-[34ch] [text-wrap:balance]">
             <p className="tracking-widest uppercase text-sm leading-6 gold-text"></p>
 
@@ -345,7 +322,6 @@ export default function WeddingRSVP() {
               {WEDDING.date} at {WEDDING.time}
             </p>
 
-            {/* Manual line breaks for the address */}
             <p className="mt-2 text-lg sm:text-xl leading-relaxed gold-text">
               <span className="block">Woodlands Hotel</span>
               <span className="block">79 Gelderd Road</span>
@@ -360,7 +336,6 @@ export default function WeddingRSVP() {
         </div>
       </header>
 
-      {/* Content */}
       <main className="relative mx-auto max-w-4xl px-6 -mt-10">
         {!submitted ? (
           <section className="rounded-3xl bg-white/90 shadow-xl p-6 sm:p-8">
@@ -402,7 +377,6 @@ export default function WeddingRSVP() {
                 />
               </div>
 
-              {/* Guests count */}
               <div>
                 <Label>How many guests (including you)?</Label>
                 <Input
@@ -414,7 +388,6 @@ export default function WeddingRSVP() {
                 />
               </div>
 
-              {/* Per-guest fields */}
               {form.attending === "yes" && Number(form.guests) > 0 && (
                 <div className="mt-2 grid gap-4">
                   <h3 className="text-lg font-semibold mt-1">Guest details</h3>
@@ -488,9 +461,8 @@ export default function WeddingRSVP() {
           </section>
         )}
 
-        {/* Details + Accommodation + Host tools */}
+        {/* Details + Accommodation */}
         <section className="mt-8 grid gap-6 sm:grid-cols-2">
-          {/* Details */}
           <div className="rounded-3xl bg-white/90 shadow p-6">
             <h3 className="text-lg font-semibold mt-1">Details</h3>
             <ul className="mt-4 space-y-2 text-sm text-gray-700">
@@ -501,7 +473,6 @@ export default function WeddingRSVP() {
             </ul>
           </div>
 
-          {/* Nearby accommodation details */}
           <div className="rounded-3xl bg-white/90 shadow p-6">
             <h3 className="text-lg font-semibold mt-1">Nearby accommodation details</h3>
             <ul className="mt-4 space-y-4 text-sm text-gray-700">
@@ -517,39 +488,6 @@ export default function WeddingRSVP() {
               </li>
             </ul>
           </div>
-
-          {/* Host tools */}
-          <div className="rounded-3xl bg-white/90 shadow p-6 sm:col-span-2">
-            <h3 className="text-lg font-semibold mt-1">Host tools</h3>
-            <p className="mt-2 text-sm text-gray-600">Visible only to you.</p>
-            <div className="mt-4 flex flex-wrap gap-3">
-              {/* Master CSV (published link you provided) */}
-              <Button
-                className="bg-white text-gray-900 border border-gray-200"
-                onClick={() => window.open(SHEET_CSV_URL, "_blank", "noopener,noreferrer")}
-              >
-                Download RSVPs (master CSV)
-              </Button>
-
-              {/* Local-only backup CSV */}
-              <Button
-                className="bg-white text-gray-900 border border-gray-200"
-                onClick={exportCSV}
-              >
-                Download local RSVPs (this device)
-              </Button>
-
-              <Button className="bg-white text-gray-900 border border-gray-200" onClick={clearAll}>
-                Clear saved RSVPs (this device)
-              </Button>
-            </div>
-            <div className="mt-4 text-xs text-gray-500">
-              <p><strong>Total saved here:</strong> {localData.length}</p>
-              <p className="mt-1">
-                RSVPs also post to your Google Sheet via the webhook above.
-              </p>
-            </div>
-          </div>
         </section>
 
         <footer className="py-16 text-center text-xs text-gray-500">
@@ -559,5 +497,6 @@ export default function WeddingRSVP() {
     </div>
   );
 }
+
 
 
